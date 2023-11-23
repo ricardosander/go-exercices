@@ -1,4 +1,4 @@
-package main
+package dup
 
 import (
 	"bufio"
@@ -8,12 +8,13 @@ import (
 	"strings"
 )
 
-func main() {
+func Dup(files []string) {
 	counts := make(map[string]int)
-	files := os.Args[1:]
 
-	if len(files) > 0 {
+	if len(files) > 1 {
 		computeFiles(files, counts)
+	} else if len(files) == 1 {
+		computeFileOld(files[0], counts)
 	} else {
 		computeLines(counts)
 	}
@@ -27,13 +28,7 @@ func main() {
 	}
 }
 
-func computeFiles(files []string, counts map[string]int) {
-	for _, fileName := range files {
-		computeFile2(fileName, counts)
-	}
-}
-
-func computeFile(fileName string, counts map[string]int) {
+func computeFileOld(fileName string, counts map[string]int) {
 	file, err := os.Open(fileName)
 	defer file.Close()
 	if err != nil {
@@ -46,7 +41,13 @@ func computeFile(fileName string, counts map[string]int) {
 	}
 }
 
-func computeFile2(fileName string, counts map[string]int) {
+func computeFiles(files []string, counts map[string]int) {
+	for _, fileName := range files {
+		computeFileNew(fileName, counts)
+	}
+}
+
+func computeFileNew(fileName string, counts map[string]int) {
 	data, err := ioutil.ReadFile(fileName)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "dup: %v\n", err)
